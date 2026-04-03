@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -162,10 +162,88 @@
         .counter-animate {
             animation: countUp 0.6s ease-out forwards;
         }
+        /* Animação do CTA pós-vídeo */
+        .cta-reveal {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-out, opacity 0.6s ease-out, margin 0.4s ease-out;
+            margin-top: 0;
+        }
+        .cta-reveal.show {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 2rem;
+        }
+        /* Pulse animation */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(234, 88, 12, 0);
+            }
+        }
+        .pulse-button {
+            animation: pulse-glow 2s infinite;
+        }
+        /* Modal LGPD */
+        .modal-lgpd {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-lgpd.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        /* Thumbnail overlay para o vídeo */
+        .video-thumbnail {
+            position: relative;
+            cursor: pointer;
+        }
+        .video-thumbnail img {
+            width: 100%;
+            border-radius: 1rem;
+        }
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+        }
+        .play-overlay:hover {
+            background: rgba(0,0,0,0.2);
+        }
+        .play-overlay .play-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(234, 88, 12, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .play-overlay:hover .play-icon {
+            transform: scale(1.1);
+            background: rgba(234, 88, 12, 1);
+        }
+        /* Fallback para imagens */
+        img {
+            background-color: #f3f4f6;
+        }
+        img[src=""] {
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-white text-carvao font-sans antialiased">
-
 
     <!-- Cabeçalho / Navegação -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-primary/10 shadow-sm">
@@ -189,7 +267,6 @@
                     <a href="#oferta" class="text-cinza-escuro hover:text-primary font-medium transition duration-300">Skin in the Game</a>
                     <a href="#contato" class="text-cinza-escuro hover:text-primary font-medium transition duration-300">Contato</a>
                 </nav>
-
 
                 <a href="#contato" class="hidden md:inline-flex bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition duration-300 transform hover:-translate-y-0.5">
                     Agendar Análise
@@ -215,15 +292,18 @@
         </div>
     </header>
 
-
     <!-- Seção Hero com Foto de Fundo e Textos Centralizados -->
     <section class="relative overflow-hidden min-h-screen flex items-center justify-center">
         <!-- Background Image com Overlay -->
         <div class="absolute inset-0 z-0">
-            <img src="images/bg.png" alt="Imóvel de luxo" class="w-full h-full object-cover">
+            <div class="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+                <div class="text-center text-white/30">
+                    <i data-lucide="image" class="w-20 h-20 mx-auto mb-4"></i>
+                    <p class="text-sm">Imagem de fundo: bg.png</p>
+                </div>
+            </div>
             <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
         </div>
-
 
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10 text-center">
             <div class="max-w-4xl mx-auto">
@@ -243,7 +323,6 @@
                     <span class="text-white font-semibold">Blindagem Jurídica</span> e um 
                     <span class="text-white font-semibold">Laudo Técnico</span> que impede o comprador de pedir descontos absurdos.
                 </p>
-
 
                 <div class="flex flex-col sm:flex-row gap-4 items-center justify-center reveal" style="transition-delay: 300ms;">
                     <a href="#contato" class="bg-accent text-white text-lg font-bold px-10 py-4 rounded-full hover:bg-accent/90 transition duration-300 shadow-xl shadow-accent/30 hover-lift inline-flex items-center gap-2 w-full sm:w-auto justify-center group">
@@ -284,11 +363,9 @@
         </div>
     </section>
 
-
     <div class="section-divider"></div>
 
-
-    <!-- Seção Vídeo Explicativo (com ID para link direto) -->
+    <!-- Seção Vídeo Explicativo -->
     <section id="video-explicativo" class="py-20 bg-gradient-to-br from-primary/5 via-white to-accent/5">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-5xl mx-auto">
@@ -302,37 +379,44 @@
                     </p>
                 </div>
 
-
                 <div class="relative reveal" style="transition-delay: 100ms;">
-                    <!-- Thumbnail do Vídeo -->
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 group cursor-pointer" onclick="openVideoModal()">
-                        <img src="images/foto.png" alt="Vídeo explicativo do método" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
-                        
-                        <!-- Overlay Gradiente -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/40 transition-all duration-300"></div>
-                        
-                        <!-- Botão Play Central -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-24 h-24 bg-accent rounded-full flex items-center justify-center shadow-2xl shadow-accent/50 group-hover:scale-110 transition-transform duration-300 group-hover:bg-primary">
-                                <i data-lucide="play" class="w-10 h-10 text-white fill-white ml-1"></i>
+                    <!-- Vídeo do YouTube com thumbnail -->
+                    <div id="videoContainer" class="relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20">
+                        <!-- Thumbnail do Vídeo -->
+                        <div id="videoThumbnail" class="video-thumbnail relative cursor-pointer" onclick="playVideo()">
+                            <div class="w-full bg-gradient-to-br from-gray-800 to-gray-700 aspect-video flex items-center justify-center rounded-xl">
+                                <div class="text-center text-white/50">
+                                    <i data-lucide="image" class="w-16 h-16 mx-auto mb-2"></i>
+                                    <p class="text-sm">Thumbnail: foto.png</p>
+                                </div>
+                            </div>
+                            <div class="play-overlay">
+                                <div class="play-icon">
+                                    <i data-lucide="play" class="w-10 h-10 text-white ml-1"></i>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-6 right-6 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                2:14
+                            </div>
+                            <div class="absolute bottom-6 left-6 text-white">
+                                <p class="text-sm font-medium opacity-90 mb-1">Assista antes de preencher o formulário</p>
+                                <h3 class="text-xl font-bold">Entenda como funciona</h3>
                             </div>
                         </div>
-                        
-                        <!-- Badge de Duração -->
-                        <div class="absolute bottom-6 right-6 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
-                            <i data-lucide="clock" class="w-4 h-4"></i>
-                            2:14
-                        </div>
-                        
-                        <!-- Título do Vídeo -->
-                        <div class="absolute bottom-6 left-6 text-white">
-                            <p class="text-sm font-medium opacity-90 mb-1">Assista antes de preencher o formulário</p>
-                            <h3 class="text-xl font-bold">Entenda mais aqui</h3>
+                        <!-- Player do YouTube -->
+                        <div id="youtubePlayer" class="video-container hidden">
+                            <iframe id="explicativeVideo" 
+                                    src="https://www.youtube.com/embed/QBGO_Q5MIgE?enablejsapi=1&rel=0" 
+                                    title="Método 360º - Venda seu imóvel em 45 dias"
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
                         </div>
                     </div>
 
-
-                    <!-- NOVO BOX: +600 LOCAÇÕES EM TEMPO RECORDE -->
+                    <!-- Box +600 LOCAÇÕES -->
                     <div class="mt-8 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 rounded-2xl p-6 border border-primary/20 shadow-lg hover-lift">
                         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                             <div class="flex items-center gap-4">
@@ -363,8 +447,34 @@
                         </div>
                     </div>
 
+                    <!-- CTA pós-vídeo -->
+                    <div id="postVideoCta" class="cta-reveal">
+                        <div class="bg-gradient-to-r from-accent to-gold rounded-2xl p-6 shadow-2xl text-center">
+                            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div class="flex-1">
+                                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur rounded-full px-4 py-1 mb-3">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                                        <span class="text-white text-xs font-bold uppercase tracking-wider">Você assistiu ao vídeo completo!</span>
+                                    </div>
+                                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">
+                                        Agora você já sabe como vender rápido!
+                                    </h3>
+                                    <p class="text-white/90 text-base md:text-lg">
+                                        Garanta uma análise gratuita e descubra o valor real do seu imóvel
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <a href="#contato" class="inline-flex items-center gap-2 bg-white text-accent font-bold px-8 py-4 rounded-full hover:shadow-xl transition duration-300 transform hover:scale-105 pulse-button">
+                                        <i data-lucide="zap" class="w-5 h-5"></i>
+                                        QUERO VENDER AGORA!
+                                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- Stats abaixo do vídeo (mantido original) -->
+                    <!-- Stats -->
                     <div class="grid grid-cols-3 gap-4 mt-8">
                         <div class="bg-white p-4 rounded-xl shadow-lg text-center border border-primary/10">
                             <p class="text-2xl font-bold text-primary">+150</p>
@@ -384,9 +494,7 @@
         </div>
     </section>
 
-
     <div class="section-divider"></div>
-
 
     <!-- Problem Section -->
     <section id="problema" class="py-20 bg-cinza-claro">
@@ -401,7 +509,6 @@
                         Hoje, as imobiliárias tradicionais jogam o seu imóvel em um <span class="text-gray-900 font-semibold">"cemitério digital"</span> junto com milhares de outras opções, esperando que alguém tropece no seu anúncio. Pior: levam curiosos e <span class="text-gray-900 font-semibold">"turistas"</span> sem crédito aprovado para passear na sua casa, enquanto o tempo passa e o seu patrimônio desvaloriza.
                     </p>
                 </div>
-
 
                 <div class="grid md:grid-cols-2 gap-8 mb-12">
                     <div class="bg-white p-8 rounded-2xl shadow-xl shadow-primary/5 border-premium hover-lift reveal">
@@ -425,30 +532,29 @@
                     </div>
                 </div>
 
-
-                <!-- Galeria de Fotos - Problemas vs Solução -->
+                <!-- Galeria de Fotos -->
                 <div class="bg-white p-6 rounded-2xl shadow-lg reveal" style="transition-delay: 200ms;">
                     <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">O cenário que seu imóvel enfrenta hoje</h3>
                     <div class="image-gallery grid-cols-2 md:grid-cols-4">
-                        <div class="gallery-item aspect-square">
-                            <img src="images/semdestaque.png" alt="Anúncio genérico" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                <span class="text-white text-sm font-bold">Fotos Amadores</span>
+                        <div class="gallery-item aspect-square bg-gray-200 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2"></i>
+                                <span class="text-xs">semdestaque.png</span>
                             </div>
                         </div>
-                        <div class="gallery-item aspect-square">
-                            <img src="images/bagunca1.png" alt="Pouca visibilidade" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                <span class="text-white text-sm font-bold">Sem Destaque</span>
+                        <div class="gallery-item aspect-square bg-gray-200 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2"></i>
+                                <span class="text-xs">bagunca1.png</span>
                             </div>
                         </div>
-                        <div class="gallery-item aspect-square">
-                            <img src="images/bagunca2.png" alt="Fotos ruins" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                <span class="text-white text-sm font-bold">Visitas sem preparo</span>
+                        <div class="gallery-item aspect-square bg-gray-200 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2"></i>
+                                <span class="text-xs">bagunca2.png</span>
                             </div>
                         </div>
-                        <!-- Card "Seu Imóvel Aqui" com link para OFERTA IRRECUSÁVEL -->
+                        <!-- Card "Seu Imóvel Aqui" -->
                         <div onclick="scrollToOferta()" class="gallery-item aspect-square bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-dashed border-primary/30 cursor-pointer hover:border-primary transition-all group">
                             <div class="text-center p-4">
                                 <i data-lucide="image-plus" class="w-8 h-8 text-primary mx-auto mb-2 group-hover:scale-110 transition-transform"></i>
@@ -475,7 +581,6 @@
         <div class="section-divider mt-20"></div>
     </section>
 
-
     <!-- Galeria de Cases de Sucesso -->
     <section id="galeria" class="py-20 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -489,151 +594,86 @@
                 </p>
             </div>
 
-
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal" style="transition-delay: 100ms;">
-                <!-- Case 1 - Cobertura Duplex Faria Lima -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel1.png" alt="Cobertura Duplex Faria Lima" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <!-- Cards de imóveis com placeholders -->
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 32 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Cobertura Duplex Faria Lima</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 4.850.000 • 420m² • 4 suítes</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-primary"></i>
-                    </div>
+                    <span class="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 32 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Cobertura Duplex Faria Lima</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 4.850.000 • 420m² • 4 suítes</p>
                 </div>
 
-
-                <!-- Case 2 - Mansão Morumbi -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel2.png" alt="Mansão Moderna Morumbi" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 28 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Mansão Moderna Morumbi</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 8.200.000 • 850m² terreno • Piscina aquecida</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-accent"></i>
-                    </div>
+                    <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 28 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Mansão Moderna Morumbi</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 8.200.000 • 850m² terreno</p>
                 </div>
 
-
-                <!-- Case 3 - Loft Design Jardins -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel3.png" alt="Loft Design Jardins" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 19 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Loft Design Jardins</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 2.100.000 • 180m² • Reforma premiada</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-primary"></i>
-                    </div>
+                    <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 19 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Loft Design Jardins</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 2.100.000 • 180m²</p>
                 </div>
 
-
-                <!-- Case 4 - Apartamento Panorâmico Itaim -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel4.png" alt="Apartamento Panorâmico Itaim" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-gold text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 25 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Apartamento Panorâmico Itaim</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 3.750.000 • 45º andar • Vista 360º</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-gold"></i>
-                    </div>
+                    <span class="bg-gold text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 25 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Apartamento Panorâmico Itaim</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 3.750.000 • 45º andar</p>
                 </div>
 
-
-                <!-- Case 5 - Casa Granja Viana -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel5.png" alt="Casa Granja Viana" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 41 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Casa Granja Viana</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 5.400.000 • 1.200m² • Campo de golf privativo</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-secondary"></i>
-                    </div>
+                    <span class="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 41 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Casa Granja Viana</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 5.400.000 • 1.200m²</p>
                 </div>
 
-
-                <!-- Case 6 - Penthouse Brooklin -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel6.png" alt="Penthouse Brooklin" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 15 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Penthouse Brooklin</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 6.100.000 • 380m² • Terraço 200m²</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-accent"></i>
-                    </div>
+                    <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 15 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Penthouse Brooklin</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 6.100.000 • 380m²</p>
                 </div>
 
-
-                <!-- Case 7 - Apartamento Higienópolis -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel7.png" alt="Apartamento Higienópolis" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 38 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Apartamento Higienópolis</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 2.950.000 • 280m² • 3 vagas + depósito</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-primary"></i>
-                    </div>
+                    <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 38 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Apartamento Higienópolis</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 2.950.000 • 280m²</p>
                 </div>
 
-
-                <!-- Case 8 - Casa Alto da Lapa -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-xl hover-lift cursor-pointer">
-                    <div class="aspect-[4/5] relative overflow-hidden">
-                        <img src="images/imovel8.png" alt="Casa Alto da Lapa" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 text-center hover-lift">
+                    <div class="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center mb-4">
+                        <i data-lucide="home" class="w-12 h-12 text-gray-400"></i>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <span class="bg-gold text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 22 dias</span>
-                        <h3 class="text-white font-bold text-lg mb-1">Casa Alto da Lapa</h3>
-                        <p class="text-gray-200 text-sm">Valor: R$ 7.800.000 • 650m² • 6 suítes • Cinema</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="external-link" class="w-5 h-5 text-gold"></i>
-                    </div>
+                    <span class="bg-gold text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">VENDIDO em 22 dias</span>
+                    <h3 class="text-gray-900 font-bold text-lg mb-1">Casa Alto da Lapa</h3>
+                    <p class="text-gray-600 text-sm">Valor: R$ 7.800.000 • 650m²</p>
                 </div>
 
-
-                <!-- Card "Seu Imóvel Aqui" - agora com onclick para OFERTA IRRECUSÁVEL -->
                 <div onclick="scrollToOferta()" class="bg-gradient-to-br from-primary/10 via-white to-accent/10 rounded-2xl shadow-xl border-2 border-dashed border-primary/30 p-8 flex flex-col items-center justify-center text-center hover-lift cursor-pointer group hover:border-primary transition-colors">
                     <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                         <i data-lucide="camera" class="w-10 h-10 text-primary group-hover:scale-110 transition-transform"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Seu Imóvel Aqui</h3>
-                    <p class="text-cinza-escuro text-sm mb-4">Entre em contato e descubra como seu imóvel pode ser o próximo case de sucesso com valorização acima do mercado</p>
+                    <p class="text-cinza-escuro text-sm mb-4">Entre em contato e descubra como seu imóvel pode ser o próximo case de sucesso</p>
                     <span class="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
                         Agendar análise <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </span>
@@ -643,8 +683,7 @@
         <div class="section-divider mt-20"></div>
     </section>
 
-
-    <!-- Seção de solução -->
+    <!-- Seção de solução (mantida) -->
     <section id="solucao" class="py-20 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal">
@@ -657,9 +696,7 @@
                 </p>
             </div>
 
-
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                <!-- Bloco 1 -->
                 <div class="bg-gradient-premium p-8 rounded-2xl border-premium hover-lift reveal group">
                     <div class="text-5xl font-bold text-primary/20 mb-2 group-hover:text-primary/40 transition">01</div>
                     <div class="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary/30 group-hover:scale-110 transition duration-300">
@@ -671,8 +708,6 @@
                     </p>
                 </div>
 
-
-                <!-- Bloco 2 -->
                 <div class="bg-gradient-premium p-8 rounded-2xl border-premium hover-lift reveal group" style="transition-delay: 100ms;">
                     <div class="text-5xl font-bold text-primary/20 mb-2 group-hover:text-primary/40 transition">02</div>
                     <div class="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary/30 group-hover:scale-110 transition duration-300">
@@ -680,12 +715,10 @@
                     </div>
                     <h3 class="text-xl font-bold mb-4 text-gray-900">Landing Page Exclusiva</h3>
                     <p class="text-cinza-escuro leading-relaxed text-sm">
-                        Seu imóvel não divide espaço com concorrentes. Ele ganha um site exclusivo e imersivo só para ele, com tour virtual.
+                        Seu imóvel não divide espaço com concorrentes. Ele ganha um site exclusivo e imersivo só para ele.
                     </p>
                 </div>
 
-
-                <!-- Bloco 3 -->
                 <div class="bg-gradient-premium p-8 rounded-2xl border-premium hover-lift reveal group" style="transition-delay: 200ms;">
                     <div class="text-5xl font-bold text-primary/20 mb-2 group-hover:text-primary/40 transition">03</div>
                     <div class="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary/30 group-hover:scale-110 transition duration-300">
@@ -697,8 +730,6 @@
                     </p>
                 </div>
 
-
-                <!-- Bloco 4 -->
                 <div class="bg-gradient-premium p-8 rounded-2xl border-premium hover-lift reveal group" style="transition-delay: 300ms;">
                     <div class="text-5xl font-bold text-primary/20 mb-2 group-hover:text-primary/40 transition">04</div>
                     <div class="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary/30 group-hover:scale-110 transition duration-300">
@@ -706,14 +737,13 @@
                     </div>
                     <h3 class="text-xl font-bold mb-4 text-gray-900">Filtro de Visitas</h3>
                     <p class="text-cinza-escuro leading-relaxed text-sm">
-                        Sua casa não é museu. Só levo para visitação clientes que já passaram por pré-análise de crédito e perfil comportamental.
+                        Sua casa não é museu. Só levo para visitação clientes que já passaram por pré-análise de crédito.
                     </p>
                 </div>
             </div>
         </div>
         <div class="section-divider mt-20"></div>
     </section>
-
 
     <!-- Seção Diferencial -->
     <section id="diferencial" class="py-20 bg-cinza-claro">
@@ -725,20 +755,17 @@
                         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
                             O fim do <span class="text-accent">"Choro"</span> por Desconto.
                         </h2>
-                        
                         <div class="space-y-5 text-cinza-escuro text-lg leading-relaxed mb-8">
                             <p>
                                 Sou <span class="text-gray-900 font-bold">Especialista em Vistorias Técnicas</span>. Antes de anunciar, emito um <span class="font-bold text-primary">Laudo Prévio</span> completo do seu imóvel.
                             </p>
                             <p>
-                                Quando o comprador tenta inventar defeitos (como elétrica antiga ou piso oco) para pedir <span class="text-accent font-bold">R$ 50 mil de desconto</span> na proposta, nós apresentamos o laudo técnico provando o valor real da propriedade.
+                                Quando o comprador tenta inventar defeitos para pedir <span class="text-accent font-bold">desconto</span> na proposta, nós apresentamos o laudo técnico provando o valor real da propriedade.
                             </p>
                             <p class="font-semibold text-gray-900">
                                 Você vende pelo preço justo, com total segurança jurídica pós-venda.
                             </p>
                         </div>
-
-
                         <div class="bg-white p-6 rounded-xl border-l-4 border-primary shadow-lg shadow-primary/5">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -746,12 +773,11 @@
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-gray-900">Laudo Técnico Blindado</h4>
-                                    <p class="text-sm text-cinza-escuro">Documentação com validade jurídica que protege sua transação contra renegociações abusivas.</p>
+                                    <p class="text-sm text-cinza-escuro">Documentação com validade jurídica que protege sua transação.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
 
                     <div class="relative reveal" style="transition-delay: 200ms;">
                         <div class="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-2xl"></div>
@@ -763,7 +789,6 @@
                                 <h3 class="text-2xl font-bold text-gray-900">Blindagem Completa</h3>
                                 <p class="text-cinza-escuro text-sm mt-2">Proteção jurídica e técnica em todas as etapas</p>
                             </div>
-                            
                             <ul class="space-y-4">
                                 <li class="flex items-center gap-3 p-3 bg-gradient-to-r from-primary/5 to-transparent rounded-lg border-l-2 border-primary">
                                     <i data-lucide="check-circle" class="text-primary w-5 h-5 flex-shrink-0"></i>
@@ -781,10 +806,6 @@
                                     <i data-lucide="check-circle" class="text-primary w-5 h-5 flex-shrink-0"></i>
                                     <span class="text-gray-700 font-medium">Segurança Pós-Venda Garantida</span>
                                 </li>
-                                <li class="flex items-center gap-3 p-3 bg-gradient-to-r from-gold/5 to-transparent rounded-lg border-l-2 border-gold">
-                                    <i data-lucide="check-circle" class="text-gold w-5 h-5 flex-shrink-0"></i>
-                                    <span class="text-gray-700 font-medium">Contratos Blindados sob Medida</span>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -793,7 +814,6 @@
         </div>
         <div class="section-divider mt-20"></div>
     </section>
-
 
     <!-- Offer Section -->
     <section id="oferta" class="py-20 bg-white relative overflow-hidden">
@@ -813,7 +833,6 @@
                     </p>
                 </div>
 
-
                 <div class="grid md:grid-cols-2 gap-8 mb-12">
                     <div class="bg-gradient-to-br from-primary to-primary-dark text-white p-10 rounded-2xl shadow-2xl shadow-primary/30 hover-lift reveal border border-primary/30">
                         <div class="flex items-center justify-between mb-4">
@@ -825,7 +844,7 @@
                         <div class="text-6xl font-extrabold mb-4 text-white">8%</div>
                         <h3 class="text-2xl font-bold mb-4 text-white">Comissão por Resultado Rápido</h3>
                         <p class="text-blue-100 leading-relaxed mb-6">
-                            Se eu vender o seu imóvel em até <span class="font-bold text-yellow-300">45 dias</span>, minha comissão é de 8% (o prêmio pela liquidez imediata e investimento pesado em marketing digital).
+                            Se eu vender o seu imóvel em até <span class="font-bold text-yellow-300">45 dias</span>, minha comissão é de 8%.
                         </p>
                         <div class="pt-6 border-t border-white/20">
                             <div class="flex items-center gap-2 text-sm font-semibold text-white">
@@ -834,7 +853,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="bg-gradient-to-br from-carvao to-gray-800 text-white p-10 rounded-2xl shadow-2xl hover-lift reveal border border-gray-700" style="transition-delay: 100ms;">
                         <div class="flex items-center justify-between mb-4">
@@ -857,8 +875,6 @@
                     </div>
                 </div>
 
-
-                <!-- Botão em destaque "QUEM VAI ASSUMIR A VENDA?" -->
                 <div class="flex justify-center mb-12 reveal" style="transition-delay: 150ms;">
                     <a href="#contato" class="bg-gradient-to-r from-accent to-gold text-white text-xl font-bold px-10 py-5 rounded-full hover:shadow-2xl hover:shadow-accent/50 transition duration-300 transform hover:-translate-y-1 inline-flex items-center gap-3 group">
                         <i data-lucide="users" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
@@ -866,7 +882,6 @@
                         <i data-lucide="arrow-right" class="w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
-
 
                 <div class="bg-white p-8 rounded-2xl max-w-3xl mx-auto border border-gray-200 shadow-lg reveal" style="transition-delay: 200ms;">
                     <div class="flex items-start gap-4">
@@ -876,7 +891,7 @@
                         <div>
                             <h4 class="font-bold text-gray-900 text-lg mb-2">Skin in the Game</h4>
                             <p class="text-cinza-escuro leading-relaxed">
-                                Essa é a maior prova de comprometimento: meu sucesso financeiro depende diretamente do sucesso de sua venda. Não ganho pela tentativa, ganho pelo resultado. Contrato de exclusividade com <span class="font-bold text-primary">cláusula de performance</span>.
+                                Essa é a maior prova de comprometimento: meu sucesso financeiro depende diretamente do sucesso de sua venda.
                             </p>
                         </div>
                     </div>
@@ -885,7 +900,6 @@
         </div>
         <div class="section-divider mt-20"></div>
     </section>
-
 
     <!-- Sobre / Prova Social -->
     <section id="contato" class="py-20 bg-cinza-claro">
@@ -902,7 +916,7 @@
                             <h3 class="text-2xl font-bold mb-1 text-gray-900">Rodrigo de Assis</h3>
                             <p class="text-vinho font-semibold mb-4">CRECI SP 49368-J</p>
                             <p class="text-cinza-escuro text-lg leading-relaxed mb-6">
-                                <span class="font-bold text-gray-900">Personal Broker</span> e Especialista em Imóveis Seletivos desde 2017. Empresário, Vistoriador PRO, Marqueteiro, graduando em Direito e TTI. Mais do que encontrar um comprador, atuo de ponta a ponta: do marketing digital à emissão do laudo de vistoria e redação de contratos blindados.
+                                <span class="font-bold text-gray-900">Personal Broker</span> e Especialista em Imóveis Seletivos desde 2017. Empresário, Vistoriador PRO, Marqueteiro, graduando em Direito e TTI.
                             </p>
                             
                             <div class="space-y-3">
@@ -926,14 +940,15 @@
                         </div>
                     </div>
 
-
                     <div class="reveal" style="transition-delay: 200ms;">
-                        <!-- Foto Profissional do Rodrigo -->
                         <div class="mb-8 relative">
                             <div class="absolute -inset-2 bg-gradient-to-r from-primary to-accent rounded-2xl blur opacity-30"></div>
                             <div class="relative bg-white p-2 rounded-2xl shadow-xl">
-                                <div class="aspect-square rounded-xl overflow-hidden relative">
-                                    <img src="images/rodrigo.png" alt="Rodrigo de Assis - Corretor e Vistoriador" class="w-full h-full object-cover object-top">
+                                <div class="aspect-square rounded-xl overflow-hidden relative bg-gray-200 flex items-center justify-center">
+                                    <div class="text-center text-gray-500">
+                                        <i data-lucide="user" class="w-16 h-16 mx-auto mb-2"></i>
+                                        <p class="text-xs">rodrigo.png</p>
+                                    </div>
                                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
                                         <div class="flex items-center gap-2">
                                             <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
@@ -950,11 +965,10 @@
                             </div>
                         </div>
 
-
                         <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
                             <h3 class="text-2xl font-bold mb-2 text-gray-900 text-center">Agendar Análise de Viabilidade</h3>
                             <p class="text-cinza-escuro mb-8 text-center text-sm">
-                                Entre em contato diretamente pelo WhatsApp para uma análise personalizada do seu imóvel em São Paulo.
+                                Entre em contato diretamente pelo WhatsApp para uma análise personalizada do seu imóvel.
                             </p>
                             
                             <a href="https://wa.me/5521990650767?text=Olá%20Rodrigo,%20gostaria%20de%20agendar%20uma%20análise%20de%20viabilidade%20para%20meu%20imóvel." 
@@ -969,7 +983,6 @@
                             <p class="text-xs text-cinza-escuro text-center mb-8">
                                 Resposta imediata | Análise sem compromisso
                             </p>
-
 
                             <div class="border-t border-gray-100 pt-6">
                                 <h4 class="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Outras formas de contato:</h4>
@@ -995,8 +1008,7 @@
         </div>
     </section>
 
-
-    <!-- Rodapé -->
+    <!-- Rodapé com LGPD -->
     <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-8">
@@ -1011,7 +1023,7 @@
                         </div>
                     </div>
                     <p class="text-gray-400 max-w-md text-sm leading-relaxed">
-                        Especialista em liquidez acelerada para imóveis de médio e alto padrão em São Paulo. Metodologia própria baseada em dados, técnica e marketing de performance.
+                        Especialista em liquidez acelerada para imóveis de médio e alto padrão em São Paulo.
                     </p>
                 </div>
                 
@@ -1020,212 +1032,223 @@
                     <p class="text-gray-500 text-sm">© 2026 Rodrigo de Assis.</p>
                     <p class="text-gray-500 text-sm mt-1">Todos os direitos reservados.</p>
                     <div class="flex gap-4 mt-4 justify-center md:justify-end">
-                        <a href="https://www.instagram.com/odetentor_rodrigoassis/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-vinho transition duration-300">
+                        <a href="https://www.instagram.com/odetentor_rodrigoassis/" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-vinho transition">
                             <i data-lucide="instagram" class="w-5 h-5"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/rodrigodeap/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-vinho transition duration-300">
+                        <a href="https://www.linkedin.com/in/rodrigodeap/" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-vinho transition">
                             <i data-lucide="linkedin" class="w-5 h-5"></i>
                         </a>
                     </div>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-600 text-xs max-w-2xl mx-auto">
-                    Esta landing page faz parte do Método 360º de Vendas Imobiliárias. As informações aqui contidas são para fins ilustrativos. 
-                    Valores de comissão podem ser ajustados conforme características específicas do imóvel.
-                </p>
+            <div class="border-t border-gray-800 mt-8 pt-8">
+                <div class="grid md:grid-cols-2 gap-6 text-center md:text-left">
+                    <div>
+                        <div class="flex items-center justify-center md:justify-start gap-2 mb-3">
+                            <i data-lucide="shield" class="w-5 h-5 text-green-400"></i>
+                            <h4 class="font-bold text-white text-sm uppercase tracking-wider">LGPD - Proteção de Dados</h4>
+                        </div>
+                        <p class="text-gray-500 text-xs leading-relaxed">
+                            Em conformidade com a Lei Geral de Proteção de Dados (Lei 13.709/2018), suas informações são tratadas com total segurança.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center md:justify-start gap-2 mb-3">
+                            <i data-lucide="file-text" class="w-5 h-5 text-accent"></i>
+                            <h4 class="font-bold text-white text-sm uppercase tracking-wider">Termos Legais</h4>
+                        </div>
+                        <p class="text-gray-500 text-xs leading-relaxed">
+                            Corretor Rodrigo de Assis - CRECI SP 49368-J. As informações sobre prazos são estimativas.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-6 mt-6 pt-4 border-t border-gray-800/50">
+                    <button onclick="openPrivacyModal()" class="text-gray-500 hover:text-accent text-xs transition-colors flex items-center gap-1">
+                        <i data-lucide="lock" class="w-3 h-3"></i>
+                        Política de Privacidade
+                    </button>
+                    <button onclick="openTermsModal()" class="text-gray-500 hover:text-accent text-xs transition-colors flex items-center gap-1">
+                        <i data-lucide="file-check" class="w-3 h-3"></i>
+                        Termos de Uso
+                    </button>
+                    <a href="#contato" class="text-gray-500 hover:text-accent text-xs transition-colors flex items-center gap-1">
+                        <i data-lucide="mail" class="w-3 h-3"></i>
+                        Contato
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
 
-
-    <!-- Botão Flutuante WhatsApp (Mobile) -->
+    <!-- Botão Flutuante WhatsApp -->
     <div class="md:hidden fixed bottom-4 right-4 z-50">
         <a href="https://wa.me/5521990650767?text=Olá%20Rodrigo,%20quero%20vender%20meu%20imóvel%20rápido" 
            target="_blank"
-           class="bg-green-600 text-white p-4 rounded-full shadow-2xl hover:bg-green-700 transition duration-300 flex items-center justify-center">
+           class="bg-green-600 text-white p-4 rounded-full shadow-2xl hover:bg-green-700 transition flex items-center justify-center">
             <i data-lucide="message-circle" class="w-6 h-6"></i>
         </a>
     </div>
 
+    <!-- Modais LGPD -->
+    <div id="privacyModal" class="modal-lgpd fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target === this) closePrivacyModal()">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+            <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-900">Política de Privacidade</h3>
+                <button onclick="closePrivacyModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="p-6 space-y-4 text-gray-700 text-sm leading-relaxed">
+                <p><strong>1. Coleta de Informações</strong><br>Coletamos informações fornecidas voluntariamente em formulários de contato.</p>
+                <p><strong>2. Uso das Informações</strong><br>Utilizamos seus dados para contato e análise do seu imóvel.</p>
+                <p><strong>3. Compartilhamento</strong><br>Não compartilhamos seus dados com terceiros sem consentimento.</p>
+                <p><strong>4. Seus Direitos (LGPD)</strong><br>Você pode solicitar a exclusão dos seus dados pelo e-mail: rodrigodeap@gmail.com</p>
+            </div>
+            <div class="sticky bottom-0 bg-gray-50 p-4 border-t border-gray-200 text-center">
+                <button onclick="closePrivacyModal()" class="bg-primary text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-primary-dark transition">Entendi</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Scripts -->
+    <div id="termsModal" class="modal-lgpd fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target === this) closeTermsModal()">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+            <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-900">Termos de Uso</h3>
+                <button onclick="closeTermsModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="p-6 space-y-4 text-gray-700 text-sm leading-relaxed">
+                <p><strong>1. Aceitação</strong><br>Ao acessar este site, você concorda com estes Termos de Uso.</p>
+                <p><strong>2. Propriedade Intelectual</strong><br>Todo o conteúdo é protegido por direitos autorais.</p>
+                <p><strong>3. Isenção de Garantias</strong><br>Os resultados apresentados são baseados em experiências anteriores.</p>
+                <p><strong>4. Lei Aplicável</strong><br>Termos regidos pelas leis brasileiras, foro em São Paulo-SP.</p>
+            </div>
+            <div class="sticky bottom-0 bg-gray-50 p-4 border-t border-gray-200 text-center">
+                <button onclick="closeTermsModal()" class="bg-primary text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-primary-dark transition">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Função para rolar até a seção de oferta
+        // Funções principais
         function scrollToOferta() {
             const ofertaSection = document.getElementById('oferta');
             if (ofertaSection) {
                 const headerOffset = 80;
                 const elementPosition = ofertaSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: elementPosition + window.pageYOffset - headerOffset, behavior: 'smooth' });
             }
         }
 
-
-        // Função para abrir o modal de vídeo
-        function openVideoModal() {
-            const modal = document.getElementById('videoModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                const iframe = modal.querySelector('iframe');
+        function playVideo() {
+            const thumbnail = document.getElementById('videoThumbnail');
+            const player = document.getElementById('youtubePlayer');
+            if (thumbnail && player) {
+                thumbnail.classList.add('hidden');
+                player.classList.remove('hidden');
+                const iframe = document.getElementById('explicativeVideo');
                 if (iframe && !iframe.src.includes('autoplay=1')) {
                     iframe.src += '&autoplay=1';
                 }
+                setupVideoTracking();
             }
         }
 
+        function showPostVideoCta() {
+            const ctaElement = document.getElementById('postVideoCta');
+            if (ctaElement && !ctaElement.classList.contains('show')) {
+                ctaElement.classList.add('show');
+                localStorage.setItem('videoWatched', 'true');
+            }
+        }
 
-        // Função para fechar o modal de vídeo
-        function closeVideoModal() {
-            const modal = document.getElementById('videoModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                const iframe = modal.querySelector('iframe');
-                if (iframe) {
-                    const src = iframe.src.replace('&autoplay=1', '').replace('?autoplay=1', '');
-                    iframe.src = src;
+        function setupVideoTracking() {
+            window.addEventListener('message', function(event) {
+                if (event.origin === 'https://www.youtube.com') {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.event === 'onStateChange' && data.info === 0) {
+                            showPostVideoCta();
+                        }
+                    } catch(e) {}
                 }
-            }
+            });
+            setTimeout(() => { showPostVideoCta(); }, 130000);
         }
 
+        function openPrivacyModal() { 
+            document.getElementById('privacyModal').classList.remove('hidden'); 
+            lucide.createIcons();
+        }
+        function closePrivacyModal() { 
+            document.getElementById('privacyModal').classList.add('hidden'); 
+        }
+        function openTermsModal() { 
+            document.getElementById('termsModal').classList.remove('hidden'); 
+            lucide.createIcons();
+        }
+        function closeTermsModal() { 
+            document.getElementById('termsModal').classList.add('hidden'); 
+        }
 
-        // Função para animação de contador
         function animateCounter(element, targetValue, duration = 2000) {
             let startTimestamp = null;
-            const startValue = 0;
-            
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const currentValue = Math.floor(progress * targetValue);
-                element.textContent = currentValue;
-                
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    element.textContent = targetValue;
-                }
+                element.textContent = Math.floor(progress * targetValue);
+                if (progress < 1) window.requestAnimationFrame(step);
+                else element.textContent = targetValue;
             };
-            
             window.requestAnimationFrame(step);
         }
 
-
-        // Inicializar ícones do Lucide
+        // Inicialização
         lucide.createIcons();
 
-
-        // Rolagem suave para links de navegação
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
+                if (targetId === '#') return;
                 if (targetId.startsWith('#') && document.querySelector(targetId)) {
                     e.preventDefault();
                     const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
+                    if (targetElement) {
                         const headerOffset = 80;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                        
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if(mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                            mobileMenu.classList.add('hidden');
-                        }
+                        window.scrollTo({ top: targetElement.offsetTop - headerOffset, behavior: 'smooth' });
                     }
                 }
             });
         });
 
-
-        // Toggle menu mobile
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', function() {
-                const menu = document.getElementById('mobile-menu');
-                if (menu) {
-                    menu.classList.toggle('hidden');
-                }
+            mobileMenuBtn.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
             });
         }
 
-
-        // Adiciona efeito de rolagem ao cabeçalho e animação do contador
         let counterStarted = false;
-        
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (header) {
-                if (window.scrollY > 50) {
-                    header.classList.add('shadow-md');
-                } else {
-                    header.classList.remove('shadow-md');
-                }
-            }
-            
-            const reveals = document.querySelectorAll('.reveal');
-            reveals.forEach(element => {
-                const windowHeight = window.innerHeight;
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < windowHeight - elementVisible) {
-                    element.classList.add('active');
-                }
-            });
-            
-            // Iniciar animação do contador quando a seção de vídeo entrar na viewport
+        window.addEventListener('scroll', () => {
             if (!counterStarted) {
                 const videoSection = document.getElementById('video-explicativo');
-                if (videoSection) {
-                    const sectionTop = videoSection.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    if (sectionTop < windowHeight - 100) {
-                        counterStarted = true;
-                        const counterElement = document.getElementById('counterValue');
-                        if (counterElement) {
-                            animateCounter(counterElement, 600, 1800);
-                        }
-                    }
+                if (videoSection && videoSection.getBoundingClientRect().top < window.innerHeight - 100) {
+                    counterStarted = true;
+                    const counterElement = document.getElementById('counterValue');
+                    if (counterElement) animateCounter(counterElement, 600, 1800);
                 }
             }
         });
-        
+
+        if (localStorage.getItem('videoWatched') === 'true') showPostVideoCta();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePrivacyModal();
+                closeTermsModal();
+            }
+        });
+
         window.dispatchEvent(new Event('scroll'));
-
-
-        const videoModal = document.getElementById('videoModal');
-        if (videoModal) {
-            videoModal.addEventListener('click', function(e) {
-                if (e.target === videoModal) {
-                    closeVideoModal();
-                }
-            });
-        }
     </script>
-
-
-    <!-- Modal de Vídeo -->
-    <div id="videoModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="relative w-full max-w-4xl">
-            <button onclick="closeVideoModal()" class="absolute -top-12 right-0 text-white hover:text-accent transition">
-                <i data-lucide="x" class="w-8 h-8"></i>
-            </button>
-            <div class="video-container bg-black">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
